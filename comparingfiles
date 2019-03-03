@@ -1,0 +1,34 @@
+#!/bin/bash
+
+echo Input a first file name:
+read FIRST_FILE
+echo Input a second file name:
+read SECOND_FILE
+
+first=filefirst.txt
+second=filesecond.txt
+
+sort $FIRST_FILE > filefirst.txt
+sort $SECOND_FILE > filesecond.txt
+
+if cmp -s $first $second
+then
+   echo "The files have the same content."
+   echo "$(<filefirst.txt)"
+else
+   echo "The files content is different."
+   paste filefirst.txt filesecond.txt | awk -F'\t' '{ printf("%-30s %s\n", $1, $2) }'
+fi
+
+echo "Do you want to delete sorted files?(yes/no)"
+
+read DELETE
+if [ $DELETE == "yes" ]; then
+   rm filefirst.txt
+   rm filesecond.txt
+   echo "Sorted files deleted"
+   exit 1
+else
+   echo "Sorted files stored to current directory"
+   exit 1
+fi
